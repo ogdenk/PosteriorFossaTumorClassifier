@@ -10,7 +10,7 @@ trainFrac = 0.8 #Training fraction (includes validation)
 valFrac = 0.2 #Fraction of training data used for validation
 
 rootDir = 'x:/'
-filename = 'rawavg.csv'
+filename = 'rawavg_nogad1.5.csv'
 datafile = os.path.join(rootDir, filename)
 
 data = pd.read_csv(datafile,index_col='Pat')
@@ -36,14 +36,16 @@ train_data = (train_data-means)/sigmas
 test_data = (test_data-means)/sigmas
 
 model = models.Sequential()
-model.add(layers.Dense(16, activation='relu', input_shape=(train_data.shape[1],)))
-model.add(layers.Dense(16, activation='relu'))
-model.add(layers.Dense(16, activation='relu'))
+model.add(layers.Dense(8, activation='relu', input_shape=(train_data.shape[1],)))
+model.add(layers.Dropout(0.5))
+model.add(layers.Dense(8, activation='relu'))
+#model.add(layers.Dropout(0.5))
+#model.add(layers.Dense(4, activation='relu'))
 model.add(layers.Dense(1, activation='sigmoid'))
 
 model.compile(optimizer='adam',loss='binary_crossentropy',metrics=['accuracy'])
 
-history = model.fit(train_data,train_labels, epochs=40, batch_size=16, validation_data=(test_data, test_labels))
+history = model.fit(train_data,train_labels, epochs=200, batch_size=8, validation_data=(test_data, test_labels))
 history_dict = history.history
 loss_values = history_dict['loss']
 val_loss_values = history_dict['val_loss']
@@ -57,7 +59,7 @@ plt.plot(epochs, acc_values, 'bo', label='Training acc')
 plt.plot(epochs, val_acc_values, 'b', label='Validation acc')
 plt.title('Training and validation accuracy')
 plt.xlabel('Epochs')
-plt.ylabel('Loss')
+plt.ylabel('Accuracy')
 plt.legend()
 plt.show()
 
