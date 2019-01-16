@@ -36,21 +36,20 @@ train_data = (train_data-means)/sigmas
 test_data = (test_data-means)/sigmas
 
 model = models.Sequential()
-model.add(layers.Dense(8, activation='relu', input_shape=(train_data.shape[1],)))
-model.add(layers.Dropout(0.5))
-model.add(layers.Dense(8, activation='relu'))
+model.add(layers.Dense(4, activation='relu', input_shape=(train_data.shape[1],)))
+#model.add(layers.Dropout(0.4))
+#model.add(layers.Dense(8, activation='relu'))
 #model.add(layers.Dropout(0.5))
 #model.add(layers.Dense(4, activation='relu'))
 model.add(layers.Dense(1, activation='sigmoid'))
 
 model.compile(optimizer='adam',loss='binary_crossentropy',metrics=['accuracy'])
 
-history = model.fit(train_data,train_labels, epochs=200, batch_size=8, validation_data=(test_data, test_labels))
+history = model.fit(train_data,train_labels, epochs=200, batch_size=4, validation_data=(test_data, test_labels))
 history_dict = history.history
 loss_values = history_dict['loss']
 val_loss_values = history_dict['val_loss']
 epochs = range(1, len(loss_values) + 1)
-
 
 acc_values = history_dict['acc']
 val_acc_values = history_dict['val_acc']
@@ -62,6 +61,7 @@ plt.xlabel('Epochs')
 plt.ylabel('Accuracy')
 plt.legend()
 plt.show()
+plt.savefig("d:/accuracy.png")
 
 plt.clf()
 plt.plot(epochs, loss_values, 'bo', label='Training loss')
@@ -71,3 +71,4 @@ plt.xlabel('Epochs')
 plt.ylabel('Loss')
 plt.legend()
 plt.show()
+plt.savefig("d:/loss.png")
